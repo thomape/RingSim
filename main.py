@@ -1,6 +1,6 @@
 # Main file for the RingSim app
 import sqlite3
-from Database import ring_sim_db
+import ring_sim_db
 from ring_sim_classes import Address, AddressBook, Ring
 
 
