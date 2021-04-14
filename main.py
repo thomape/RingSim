@@ -77,6 +77,10 @@ if __name__ == "__main__":
 
     conn.connect()
 
+    conn.create_record(
+        
+    )
+
 
 
 
