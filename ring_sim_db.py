@@ -1,5 +1,4 @@
 import sqlite3
-from sqlite3.dbapi2 import PARSE_COLNAMES, register_adapter
 
 class DBConnection():
 
@@ -23,11 +22,8 @@ class DBConnection():
         except sqlite3.Error as e:
             pass
 
-
-  # write CRUD operations below
-
-    # Record CRUD
     def create_record(self, address):
+        """Pass in paramater of type Address class instance."""
         values = address.get_complete_address()
         query = '''INSERT INTO ADDRESS 
                     (symbol_1, symbol_2, symbol_3, symbol_4, symbol_5, symbol_6, symbol_7) 
@@ -35,20 +31,66 @@ class DBConnection():
         self.cursor.execute(query,values)
         self.conn.commit()
 
-    def read_record(self, address):
-        values = address.get_complete_address()
-        query = "SELECT * FROM ADDRESS WHERE"
-        where = f''' symbol_1 = '{values[0]}' AND symbol_2 = '{values[1]}' AND symbol_3 = '{values[2]}' AND symbol_4 = '{values[3]}' AND symbol_5 = '{values[4]}' AND symbol_6 = '{values[5]}' AND symbol_7 = '{values[6]}';''' 
-                    #.format(values[0],values[1],values[2],values[3],values[4],values[5],values[6])
-        
-        query = query + where
+    def read_record_ID(self, address_ID):
+        """Pass in integer for address ID."""
+        query = f"SELECT * FROM ADDRESS WHERE ID = '{address_ID}'"
 
-        address2 = self.cursor.execute(query)
-        #print(address2.fetchone())
+        db_address = self.cursor.execute(query)
+        db_address = db_address.fetchone()
+
         self.conn.commit()
 
-        return address2
+        return db_address
 
+    def read_record_home(self, home):
+        """Pass in home symbol to return all records with that as home."""
+        query = f"SELECT * FROM ADDRESS WHERE symbol_7 = '{home}'"
+
+        db_address = self.cursor.execute(query)
+        db_address = db_address.fetchall()
+
+        self.conn.commit()
+
+        return db_address
+        
+    def address_exists(self, address):
+        """Pass in paramater of type Address class instance."""
+        values = address.get_complete_address()
+        does_exist = False
+
+        query = "SELECT * FROM ADDRESS WHERE"
+        where = f''' symbol_1 = '{values[0]}' AND symbol_2 = '{values[1]}' AND symbol_3 = '{values[2]}' 
+                    AND symbol_4 = '{values[3]}' AND symbol_5 = '{values[4]}' AND symbol_6 = '{values[5]}' 
+                    AND symbol_7 = '{values[6]}';''' 
+ 
+        query = query + where
+
+        db_address = self.cursor.execute(query)
+        db_address = db_address.fetchone()
+
+        if(db_address == values):
+            does_exist = True
+
+        self.conn.commit()
+
+        return does_exist
+
+    def address_ID_exists(self, address_ID):
+        """Pass in integer for address ID."""
+        does_exist = False
+
+        query = f"SELECT * FROM ADDRESS WHERE id = '{address_ID}'"
+
+        db_address_ID = self.cursor.execute(query)
+        db_address_ID = db_address_ID.fetchone()
+
+        if(db_address_ID != None):
+            if(db_address_ID[-1] == address_ID):
+                does_exist = True
+
+        self.conn.commit()
+
+        return does_exist
 
     def update_record(self, table, address):
         self.conn.execute("INSERT INTO {} WHERE self.conn.name = {}", address)
@@ -57,4 +99,7 @@ class DBConnection():
     def delete_record(self, table, address):
         self.conn.execute("DROP FROM TABLE {} WHERE self.conn.name = {}", address)
         pass
+
+    def close_db(self):
+        self.conn.close()
 

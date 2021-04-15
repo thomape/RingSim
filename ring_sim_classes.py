@@ -4,12 +4,11 @@ class Address():
 
     address_length : int
 
-    def __init__(self, complete_address) -> None:
+    def __init__(self, complete_address):
         is_empty = False
 
         if complete_address == ():
             is_empty = True
-
 
         if is_empty:
             self.home = None
@@ -25,23 +24,29 @@ class Address():
         return self.complete_address
     
     def get_home(self):
-        return self.complete_address[self.address_length]
+        """The home symbol is know as the last of 7 symbols."""
+        return self.complete_address[6]
 
     def get_digit(self, position):
+        """Pass in integer to return specific location of symbol."""
         return self.complete_address[position - 1]
+
+    def get_address_length(self,address):
+        pass
+
+    def get_address_ID(self):
+        return self.complete_address[-1]
  
     def set_complete_address(self, complete_address):
+        """Pass in tuple to create new address."""
         self.complete_address = complete_address
-    
-    def set_home(self, home):
-        self.complete_address[self.address_length] = home
 
     # Basic methods
     def print_address(self):
         print(self.complete_address)
 
     def print_home(self):
-        print(self.complete_address[self.address_length])
+        print(self.complete_address[6])
 
 class AddressBook(Address):
     # This class will be a collection of all entered address
