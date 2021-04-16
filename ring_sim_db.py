@@ -52,6 +52,16 @@ class DBConnection():
         self.conn.commit()
 
         return db_address
+
+    def read_all(self):
+        query = "SELECT * FROM ADDRESS"
+
+        db_address = self.cursor.execute(query)
+        db_address = db_address.fetchall()
+
+        self.conn.commit()
+
+        return db_address
         
     def address_exists(self, address):
         """Pass in paramater of type Address class instance."""
@@ -92,13 +102,25 @@ class DBConnection():
 
         return does_exist
 
-    def update_record(self, table, address):
-        self.conn.execute("INSERT INTO {} WHERE self.conn.name = {}", address)
-        pass
+    def delete_record_ID(self, address_ID):
+        """Pass in an integeter value that is address id """
+        self.conn.execute(f"DELETE FROM ADDRESS WHERE id = '{address_ID}'")
+        self.conn.commit()
 
-    def delete_record(self, table, address):
-        self.conn.execute("DROP FROM TABLE {} WHERE self.conn.name = {}", address)
-        pass
+
+    def delete_record_address(self, address):
+        """Pass in address object to find"""
+        self.conn.execute(f"DELETE FROM ADDRESS WHERE SYMBOL_7 = '{address[6]}' AND id = '{address[-1]}'")
+        self.conn.commit()
+        
+    def update_record(self, address):
+        values = address.get_complete_address() 
+        """Pass in address object to change addressed based on id"""
+        self.conn.execute(f'''UPDATE ADDRESS SET symbol_1 = '{values[0]}', symbol_2 = '{values[1]}', symbol_3 = '{values[2]}',  
+                                symbol_4 = '{values[3]}', symbol_5 = '{values[4]}', symbol_6 = '{values[5]}', symbol_7 = '{values[6]}' 
+                                WHERE id = '{values[-1]}' ''')
+        self.conn.commit()
+        
 
     def close_db(self):
         self.conn.close()
