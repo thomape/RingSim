@@ -10,6 +10,16 @@ CREATE TABLE IF NOT EXISTS ADDRESS (
     ID INTEGER PRIMARY KEY AUTOINCREMENT,
     CONSTRAINT con UNIQUE (symbol_1,symbol_2,symbol_3,symbol_4,symbol_5,symbol_6,symbol_7)  
 );
+
+CREATE TABLE IF NOT EXISTS RINGS (
+    origin_key TEXT NOT NULL,
+    origin_value  TEXT NOT NULL,
+    ID INTEGER PRIMARY KEY AUTOINCREMENT,
+    CONSTRAINT con UNIQUE (origin_key, origin_value)
+);
+
+select * from rings
+
 drop table ADDRESS
 select * from ADDRESS
 
