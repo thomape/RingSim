@@ -155,18 +155,64 @@ class DBConnRing():
             print(error)
     
     def create_ring(self, origin):
-        """Pass in a dict"""
-        key = origin.keys()
-        value = origin[key]
-        sql = f'''INSERT INTO rings(key,value)VALUES({key},{value});'''
-        self.cursor.execute(sql)
+        """Pass in a tuple"""
+        query = '''INSERT INTO rings(origin_key, origin_value)VALUES(?,?);'''
+
+        self.cursor.execute(query, origin)
         self.conn.commit()
 
     def read_ring(self, origin):
-        pass
+        """Pass in string as origin"""
+        query = f"SELECT origin_key, origin_value FROM rings WHERE origin_key = '{origin}';"
+
+        selected_origin = self.cursor.execute(query)
+        selected_origin = selected_origin.fetchall()
+
+        self.conn.commit()
+
+        target = dict((key, value) for key, value in selected_origin)
+        return target
+
+    def read_all_rings(self):
+        """Will return all addresses in db"""
+        query = "SELECT * FROM rings"
+
+        db_ring = self.cursor.execute(query)
+        db_ring = db_ring.fetchall()
+
+        self.conn.commit()
+
+        return db_ring
 
     def update_ring(self, origin):
-        pass
+        """Pass in a tuple with current key and new value"""
+        query = f"UPDATE rings SET origin_value = '{origin[1]}' WHERE origin_key = '{origin[0]}';"
+
+        self.cursor.execute(query)
+        self.conn.commit()
 
     def delete_ring(self, origin):
+        """Pass in string to delete based on key"""
         pass
+
+
+    def ring_exist(self, origin):
+        """Pass in origin string"""
+        does_exist = False
+        query = f"SELECT * FROM rings WHERE origin_key = '{origin}';"
+
+        print(query)
+        ring = self.cursor.execute(query)
+        ring = ring.fetchone()
+
+        if ring is not None:
+            if ring[0] == origin:
+                does_exist = True
+
+        self.conn.commit()
+
+        return does_exist
+
+        
+        
+    
