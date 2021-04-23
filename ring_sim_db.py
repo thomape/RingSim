@@ -193,15 +193,15 @@ class DBConnRing():
 
     def delete_ring(self, origin):
         """Pass in string to delete based on key"""
-        pass
-
+        query = f"DELETE FROM rings WHERE origin_key = {origin};"
+        self.cursor.execute(query)
+        self.conn.commit()
 
     def ring_exist(self, origin):
         """Pass in origin string"""
         does_exist = False
         query = f"SELECT * FROM rings WHERE origin_key = '{origin}';"
 
-        print(query)
         ring = self.cursor.execute(query)
         ring = ring.fetchone()
 
